@@ -619,7 +619,97 @@
         receiveAmount.value = 'Ошибка валюты';
         return;
       }
+      
+      // ----------------------
+      // ДИНАМИЧЕСКИЙ КУРС CNY
+      // ----------------------
+      let dynamicCnyRate = 13; // базовый курс (можно оставить как есть)
 
+      // временно считаем сколько юаней получится при базовом курсе
+      const tempResult = value / dynamicCnyRate;
+      
+      const cny200border = 11.99
+      const cny1000border = 11.84
+      const cny3000border = 11.79
+
+      // выбираем курс по диапазону получаемых юаней
+      if (tempResult < 1000) {
+          dynamicCnyRate = cny200border;
+      } else if (tempResult < 3000) {
+          dynamicCnyRate = cny1000border;
+      } else if (tempResult < 4000) {
+          dynamicCnyRate = cny3000border;
+      } else if (tempResult < 5000) {
+          dynamicCnyRate = cny3000border - 0.01;
+      } else if (tempResult < 7000) {
+          dynamicCnyRate = cny3000border - 0.02;
+      } else if (tempResult < 8000) {
+          dynamicCnyRate = cny3000border - 0.03;
+      } else if (tempResult < 10000) {
+          dynamicCnyRate = cny3000border - 0.04;
+      } else if (tempResult < 13000) {
+          dynamicCnyRate = cny3000border - 0.05;
+      } else if (tempResult < 16000) {
+          dynamicCnyRate = cny3000border - 0.07;
+      } else if (tempResult < 20000) {
+          dynamicCnyRate = cny3000border - 0.08;
+      } else if (tempResult < 30000) {
+          dynamicCnyRate = cny3000border - 0.1;
+      } else if (tempResult < 40000) {
+          dynamicCnyRate = cny3000border - 0.12;
+      } else if (tempResult < 50000) {
+          dynamicCnyRate = cny3000border - 0.14;
+      } else if (tempResult >= 50000) {
+          dynamicCnyRate = cny3000border - 0.15;
+      }
+
+      // подменяем курс CNY внутри rates
+      rates.CNY = dynamicCnyRate;
+      
+      // ----------------------
+      // ДИНАМИЧЕСКИЙ КУРС USDT (аналогично CNY)
+      // ----------------------
+      let dynamicUsdtRate = 95; // базовый курс USDT
+
+      // три константы для USDT (редактируемые)
+      const usdt200border = 94.5;
+      const usdt1000border = 94;
+      const usdt3000border = 93.5;
+
+      // выбираем курс по тем же диапазонам, что и для CNY
+      if (tempResult < 1000) {
+          dynamicUsdtRate = usdt200border;
+      } else if (tempResult < 3000) {
+          dynamicUsdtRate = usdt1000border;
+      } else if (tempResult < 4000) {
+          dynamicUsdtRate = usdt3000border;
+      } else if (tempResult < 5000) {
+          dynamicUsdtRate = usdt3000border - 0.01;
+      } else if (tempResult < 7000) {
+          dynamicUsdtRate = usdt3000border - 0.02;
+      } else if (tempResult < 8000) {
+          dynamicUsdtRate = usdt3000border - 0.03;
+      } else if (tempResult < 10000) {
+          dynamicUsdtRate = usdt3000border - 0.04;
+      } else if (tempResult < 13000) {
+          dynamicUsdtRate = usdt3000border - 0.05;
+      } else if (tempResult < 16000) {
+          dynamicUsdtRate = usdt3000border - 0.07;
+      } else if (tempResult < 20000) {
+          dynamicUsdtRate = usdt3000border - 0.08;
+      } else if (tempResult < 30000) {
+          dynamicUsdtRate = usdt3000border - 0.10;
+      } else if (tempResult < 40000) {
+          dynamicUsdtRate = usdt3000border - 0.12;
+      } else if (tempResult < 50000) {
+          dynamicUsdtRate = usdt3000border - 0.14;
+      } else {
+          dynamicUsdtRate = usdt3000border - 0.15;
+      }
+
+      // подменяем курс USDT внутри rates
+      rates.USDT = dynamicUsdtRate;
+      
       // Пересчёт через рубли
       const valueInRub = value * rates[fromCode];
       const result = valueInRub / rates[toCode];
